@@ -6,7 +6,7 @@ import Smurfs from './components/Smurfs';
 
 import { Route } from 'react-router-dom';
 import axios from 'axios'
-import { NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 
 class App extends Component {
   constructor(props) {
@@ -27,7 +27,14 @@ class App extends Component {
   // add any needed code to ensure that the smurfs collection exists on state and it has data coming from the server
   // Notice what your map function is looping over and returning inside of Smurfs.
   // You'll need to make sure you have the right properties on state and pass them down to props.
- 
+  postSmurf = smurf =>{
+    axios.post('http://localhost:3333/smurfs', smurf)
+    .then(res=>{
+      console.log(res)
+      this.setState({smurfs: res.data})
+    })
+    .catch(err=> console.log(err))
+  }
   render() {
     return (
       <div className="App">
@@ -41,7 +48,7 @@ class App extends Component {
         />
         <Route path = '/smurf-form'
         render ={props =>(
-          <SmurfForm {...props}/>
+          <SmurfForm {...props} postSmurf={this.postSmurf}/>
         )}
         />
       </div>
@@ -49,4 +56,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
